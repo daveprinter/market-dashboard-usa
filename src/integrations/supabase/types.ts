@@ -14,16 +14,149 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audit_log: {
+        Row: {
+          action: string
+          actor: string | null
+          category: Database["public"]["Enums"]["biz_category"] | null
+          created_at: string
+          details: Json | null
+          id: number
+          tx_id: string | null
+        }
+        Insert: {
+          action: string
+          actor?: string | null
+          category?: Database["public"]["Enums"]["biz_category"] | null
+          created_at?: string
+          details?: Json | null
+          id?: number
+          tx_id?: string | null
+        }
+        Update: {
+          action?: string
+          actor?: string | null
+          category?: Database["public"]["Enums"]["biz_category"] | null
+          created_at?: string
+          details?: Json | null
+          id?: number
+          tx_id?: string | null
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          category: Database["public"]["Enums"]["biz_category"]
+          commission: number
+          completion_status: Database["public"]["Enums"]["done_status"]
+          created_at: string
+          created_by: string | null
+          description: string
+          expenses: number
+          gross: number
+          id: string
+          is_demo: boolean
+          net: number | null
+          payment_status: Database["public"]["Enums"]["pay_status"]
+          platform: string
+          ref: string
+          refunds: number
+          source: Database["public"]["Enums"]["record_source"]
+          state_code: string
+          tx_date: string
+          updated_at: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["biz_category"]
+          commission?: number
+          completion_status?: Database["public"]["Enums"]["done_status"]
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          expenses?: number
+          gross?: number
+          id?: string
+          is_demo?: boolean
+          net?: number | null
+          payment_status?: Database["public"]["Enums"]["pay_status"]
+          platform: string
+          ref?: string
+          refunds?: number
+          source?: Database["public"]["Enums"]["record_source"]
+          state_code: string
+          tx_date?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["biz_category"]
+          commission?: number
+          completion_status?: Database["public"]["Enums"]["done_status"]
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          expenses?: number
+          gross?: number
+          id?: string
+          is_demo?: boolean
+          net?: number | null
+          payment_status?: Database["public"]["Enums"]["pay_status"]
+          platform?: string
+          ref?: string
+          refunds?: number
+          source?: Database["public"]["Enums"]["record_source"]
+          state_code?: string
+          tx_date?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      can_see_category: {
+        Args: { _cat: Database["public"]["Enums"]["biz_category"] }
+        Returns: boolean
+      }
+      has_any_role: { Args: { _user_id: string }; Returns: boolean }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "manager" | "staff" | "tax_officer"
+      biz_category:
+        | "marketplace"
+        | "event_space"
+        | "online"
+        | "tax_refund"
+        | "tickets"
+      done_status: "open" | "in_progress" | "completed" | "cancelled"
+      pay_status: "pending" | "paid" | "failed" | "refunded"
+      record_source: "manual" | "import" | "api"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +283,18 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "manager", "staff", "tax_officer"],
+      biz_category: [
+        "marketplace",
+        "event_space",
+        "online",
+        "tax_refund",
+        "tickets",
+      ],
+      done_status: ["open", "in_progress", "completed", "cancelled"],
+      pay_status: ["pending", "paid", "failed", "refunded"],
+      record_source: ["manual", "import", "api"],
+    },
   },
 } as const
