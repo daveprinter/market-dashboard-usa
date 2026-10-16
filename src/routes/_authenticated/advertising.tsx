@@ -103,7 +103,7 @@ function AdvertisingPage() {
   );
 }
 
-function AccountCard(p: { icon: React.ReactNode; title: string; connected: boolean; name?: string; link?: string; img?: string; stats: [string, string][]; note?: string }) {
+function AccountCard(p: { icon: React.ReactNode; title: string; connected: boolean; name?: string | undefined; link?: string | undefined; img?: string | undefined; stats: [string, string][]; note?: string | undefined }) {
   return (
     <div className="space-y-3 rounded-xl border bg-card p-5">
       <div className="flex items-center justify-between">
@@ -148,7 +148,7 @@ function Campaigns({ accountId, canManage }: { accountId: string; canManage: boo
           <th className="py-2">Campaign</th><th>Status</th><th className="text-right">Daily budget</th><th className="text-right">Spend</th><th className="text-right">Reach</th><th className="text-right">Clicks</th>{canManage && <th />}
         </tr></thead>
         <tbody>
-          {q.data.map((c) => (
+          {q.data.map((c: any) => (
             <tr key={c.id} className="border-t">
               <td className="py-2"><p className="font-medium">{c.name}</p><p className="text-xs text-muted-foreground">{c.objective.replace("OUTCOME_", "").toLowerCase()}</p></td>
               <td><Badge variant={c.effective_status === "ACTIVE" ? "default" : "secondary"}>{c.effective_status.toLowerCase().replace(/_/g, " ")}</Badge></td>

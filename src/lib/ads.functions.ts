@@ -5,8 +5,8 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 const GW = "https://connector-gateway.lovable.dev";
 
 async function gw(connector: "meta_ads" | "tiktok", path: string, init?: RequestInit) {
-  const lk = process.env.LOVABLE_API_KEY;
-  const ck = connector === "meta_ads" ? process.env.META_ADS_API_KEY : process.env.TIKTOK_API_KEY;
+  const lk = process.env['LOVABLE_API_KEY'];
+  const ck = connector === "meta_ads" ? process.env['META_ADS_API_KEY'] : process.env['TIKTOK_API_KEY'];
   if (!lk || !ck) throw new Error(`${connector} is not connected`);
   const res = await fetch(`${GW}/${connector}/${path}`, {
     ...init,
@@ -71,7 +71,7 @@ export const updateCampaign = createServerFn({ method: "POST" })
   }).parse(d))
   .handler(async ({ data, context }) => {
     await assertManager(context.supabase, context.userId);
-    const body: Record<string, unknown> = {};
+    const body: { status?: string; name?: string; daily_budget?: number } = {};
     if (data.status) body.status = data.status;
     if (data.name) body.name = data.name;
     if (data.dailyBudget) body.daily_budget = Math.round(data.dailyBudget * 100);
