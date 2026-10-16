@@ -29,7 +29,7 @@ export function TxDialog({ open, onOpenChange, initial, defaultCategory }: { ope
   const qc = useQueryClient();
   const { data: me } = useMe();
   const blank = (): Form => ({
-    category: defaultCategory ?? "marketplace", state_code: "CA", platform: CATEGORIES.find((c) => c.id === (defaultCategory ?? "marketplace"))!.platforms[0],
+    category: defaultCategory ?? "marketplace", state_code: "CA", platform: CATEGORIES.find((c) => c.id === (defaultCategory ?? "marketplace"))!.platforms[0] ?? "",
     description: "", tx_date: new Date().toISOString().slice(0, 10), gross: 0, expenses: 0, commission: 0, refunds: 0, payment_status: "pending", completion_status: "open",
   });
   const [f, setF] = useState<Form>(blank());
@@ -50,7 +50,7 @@ export function TxDialog({ open, onOpenChange, initial, defaultCategory }: { ope
       }
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["transactions"] }); toast.success(initial ? "Record updated" : "Record added"); onOpenChange(false); },
-    onError: (e) => toast.error(e instanceof z.ZodError ? e.issues[0].message : (e as Error).message),
+    onError: (e) => toast.error(e instanceof z.ZodError ? (e.issues[0]?.message ?? "Invalid") : (e as Error).message),
   });
 
   const set = (k: keyof Form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setF({ ...f, [k]: e.target.value });
@@ -63,7 +63,7 @@ export function TxDialog({ open, onOpenChange, initial, defaultCategory }: { ope
         <DialogHeader><DialogTitle>{initial ? `Edit ${initial.ref}` : "Add a record"}</DialogTitle></DialogHeader>
         <div className="grid grid-cols-2 gap-3">
           <div className="col-span-2 space-y-1"><Label>Business</Label>
-            <select className={sel} value={f.category} onChange={(e) => setF({ ...f, category: e.target.value as Category, platform: CATEGORIES.find((c) => c.id === e.target.value)!.platforms[0] })}>
+            <select className={sel} value={f.category} onChange={(e) => setF({ ...f, category: e.target.value as Category, platform: CATEGORIES.find((c) => c.id === e.target.value)!.platforms[0] ?? "" })}>
               {cats.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
             </select></div>
           <div className="space-y-1"><Label>State</Label>

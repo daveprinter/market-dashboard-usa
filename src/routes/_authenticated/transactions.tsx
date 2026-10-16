@@ -39,12 +39,12 @@ function TxPage() {
     (!q || `${r.ref} ${r.platform} ${r.description}`.toLowerCase().includes(q.toLowerCase()))), [data, cat, st, pay, src, from, to, q]);
   const t = totals(rows);
 
-  async function importCsv(file: File) {
+  async function importCsv(file: File): Promise<void> {
     const text = await file.text();
     const [head, ...lines] = text.trim().split(/\r?\n/);
-    const cols = head.split(",").map((c) => c.trim().toLowerCase().replace(/"/g, ""));
+    const cols = (head ?? "").split(",").map((c) => c.trim().toLowerCase().replace(/"/g, ""));
     const need = ["category", "state", "platform", "date", "gross"];
-    if (!need.every((n) => cols.includes(n))) return toast.error(`CSV needs columns: ${need.join(", ")} (optional: expenses, commission, refunds, payment, completion, description)`);
+    if (!need.every((n) => cols.includes(n))) { toast.error(`CSV needs columns: ${need.join(", ")} (optional: expenses, commission, refunds, payment, completion, description)`); return; }
     const valid = new Set(CATEGORIES.map((c) => c.id));
     const recs = [];
     for (const line of lines.slice(0, 2000)) {
@@ -61,17 +61,17 @@ function TxPage() {
         source: "import" as const, created_by: me!.id,
       });
     }
-    if (!recs.length) return toast.error("No valid rows found");
+    if (!recs.length) { toast.error("No valid rows found"); return; }
     const { error } = await supabase.from("transactions").insert(recs);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success(`Imported ${recs.length} of ${lines.length} rows`);
     qc.invalidateQueries({ queryKey: ["transactions"] });
   }
 
-  async function clearDemo() {
+  async function clearDemo(): Promise<void> {
     if (!confirm("Delete all demo records? Your real records stay.")) return;
     const { error } = await supabase.from("transactions").delete().eq("is_demo", true);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Demo records removed");
     qc.invalidateQueries({ queryKey: ["transactions"] });
   }

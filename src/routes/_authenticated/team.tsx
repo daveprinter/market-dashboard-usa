@@ -67,7 +67,7 @@ function TeamPage() {
             const d = a.details as Record<string, unknown> | null;
             return (
               <li key={a.id} className="flex flex-wrap justify-between gap-2 py-2">
-                <span><b className="capitalize">{a.action}</b> {String(d?.ref ?? "")} <span className="text-muted-foreground">· {catById(a.category ?? "")?.short}</span></span>
+                <span><b className="capitalize">{a.action}</b> {String(d?.["ref"] ?? "")} <span className="text-muted-foreground">· {catById(a.category ?? "")?.short}</span></span>
                 <span className="text-muted-foreground">{emailOf(a.actor)} · {new Date(a.created_at).toLocaleString()}</span>
               </li>
             );
