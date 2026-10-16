@@ -72,8 +72,9 @@ function AuthPage() {
     const res = mode === "in"
       ? await supabase.auth.signInWithPassword(p.data)
       : await supabase.auth.signUp({ ...p.data, options: { emailRedirectTo: window.location.origin + "/dashboard" } });
+    if (res.error) { setBusy(false); toast.error(res.error.message); return; }
+    if (res.data.session) { navigate({ to: "/dashboard", replace: true }); return; }
     setBusy(false);
-    if (res.error) { toast.error(res.error.message); return; }
     if (mode === "up" && !res.data.session) toast.success("Check your email to confirm your account.");
   }
 
@@ -102,7 +103,7 @@ function AuthPage() {
           <div className="flex items-center gap-3 text-xs text-muted-foreground"><div className="h-px flex-1 bg-border" />or<div className="h-px flex-1 bg-border" /></div>
           <div className="space-y-2"><Label htmlFor="email">Email</Label><Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></div>
           <div className="space-y-2"><Label htmlFor="pw">Password</Label><Input id="pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />{mode === "up" && <StrengthBar password={password} />}</div>
-          <Button type="submit" className="w-full" disabled={busy}>{busy ? "Please wait…" : mode === "in" ? "Sign in" : "Create account"}</Button>
+          <Button type="submit" className="w-full" disabled={busy}>{busy ? (mode === "in" ? "Signing in…" : "Creating account…") : mode === "in" ? "Sign in" : "Create account"}</Button>
           <button type="button" className="w-full text-sm text-muted-foreground hover:text-foreground" onClick={() => setMode(mode === "in" ? "up" : "in")}>
             {mode === "in" ? "New here? Create an account" : "Already have an account? Sign in"}
           </button>

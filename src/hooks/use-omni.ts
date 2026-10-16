@@ -22,7 +22,8 @@ export function useMe() {
   return useQuery({
     queryKey: ["me"],
     queryFn: async () => {
-      const { data: u } = await supabase.auth.getUser();
+      const { data: sd } = await supabase.auth.getSession();
+      const u = { user: sd.session?.user };
       if (!u.user) return null;
       const { data } = await supabase.from("user_roles").select("role").eq("user_id", u.user.id);
       const roles = (data ?? []).map((r) => r.role as Role);
