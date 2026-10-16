@@ -21,7 +21,34 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-const schema = z.object({ email: z.string().trim().email().max(255), password: z.string().min(8, "At least 8 characters").max(72) });
+const schema = z.object({ email: z.string().trim().email().max(255), password: z.string().min(1, "Enter your password").max(72) });
+
+const RULES = [
+  { label: "6+ characters", test: (p: string) => p.length >= 6 },
+  { label: "Lowercase letter", test: (p: string) => /[a-z]/.test(p) },
+  { label: "Capital letter", test: (p: string) => /[A-Z]/.test(p) },
+  { label: "Digit", test: (p: string) => /\d/.test(p) },
+  { label: "Special character", test: (p: string) => /[^A-Za-z0-9]/.test(p) },
+];
+
+function StrengthBar({ password }: { password: string }) {
+  const passed = RULES.filter((r) => r.test(password)).length;
+  return (
+    <div className="space-y-2">
+      <div className="flex gap-1">
+        {RULES.map((_, i) => (
+          <div key={i} className={`h-1.5 flex-1 rounded-full ${i < passed ? (passed === RULES.length ? "bg-primary" : "bg-accent") : "bg-muted"}`} />
+        ))}
+      </div>
+      <ul className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
+        {RULES.map((r) => {
+          const ok = r.test(password);
+          return <li key={r.label} className={ok ? "text-primary" : "text-muted-foreground"}>{ok ? "✓" : "○"} {r.label}</li>;
+        })}
+      </ul>
+    </div>
+  );
+}
 
 function AuthPage() {
   const navigate = useNavigate();
@@ -40,6 +67,7 @@ function AuthPage() {
     e.preventDefault();
     const p = schema.safeParse({ email, password });
     if (!p.success) { toast.error(p.error.issues[0]?.message ?? "Invalid"); return; }
+    if (mode === "up" && !RULES.every((r) => r.test(password))) { toast.error("Password doesn't meet all requirements"); return; }
     setBusy(true);
     const res = mode === "in"
       ? await supabase.auth.signInWithPassword(p.data)
@@ -73,7 +101,7 @@ function AuthPage() {
           <Button type="button" variant="outline" className="w-full" onClick={google}>Continue with Google</Button>
           <div className="flex items-center gap-3 text-xs text-muted-foreground"><div className="h-px flex-1 bg-border" />or<div className="h-px flex-1 bg-border" /></div>
           <div className="space-y-2"><Label htmlFor="email">Email</Label><Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></div>
-          <div className="space-y-2"><Label htmlFor="pw">Password</Label><Input id="pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required /></div>
+          <div className="space-y-2"><Label htmlFor="pw">Password</Label><Input id="pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />{mode === "up" && <StrengthBar password={password} />}</div>
           <Button type="submit" className="w-full" disabled={busy}>{busy ? "Please wait…" : mode === "in" ? "Sign in" : "Create account"}</Button>
           <button type="button" className="w-full text-sm text-muted-foreground hover:text-foreground" onClick={() => setMode(mode === "in" ? "up" : "in")}>
             {mode === "in" ? "New here? Create an account" : "Already have an account? Sign in"}
