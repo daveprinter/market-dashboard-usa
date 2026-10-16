@@ -1,7 +1,7 @@
 import { Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { LayoutDashboard, ListOrdered, MapPin, Users, LogOut, Menu, Store, CalendarDays, ShoppingBag, FileText, Ticket, type LucideIcon } from "lucide-react";
+import { LayoutDashboard, ListOrdered, MapPin, Users, LogOut, Menu, Store, CalendarDays, ShoppingBag, FileText, Ticket, Megaphone, type LucideIcon } from "lucide-react";
 import logo from "@/assets/omnitrack-logo.png";
 import { supabase } from "@/integrations/supabase/client";
 import { useMe } from "@/hooks/use-omni";
@@ -40,6 +40,7 @@ export function AppShell() {
       <Link to="/dashboard" className={linkCls} activeProps={{ className: activeCls }}><LayoutDashboard className="h-4 w-4" />Overview</Link>
       <Link to="/transactions" className={linkCls} activeProps={{ className: activeCls }}><ListOrdered className="h-4 w-4" />Transactions</Link>
       <Link to="/states" className={linkCls} activeProps={{ className: activeCls }}><MapPin className="h-4 w-4" />States</Link>
+      <Link to="/advertising" className={linkCls} activeProps={{ className: activeCls }}><Megaphone className="h-4 w-4" />Advertising</Link>
       <p className="mt-5 px-3 text-xs font-semibold uppercase tracking-wider text-sidebar-foreground/50">Businesses</p>
       {catNav.filter((c) => c.id !== "tax_refund" || me?.canTax).map((c) => {
         const Icon = catIcons[c.id];
