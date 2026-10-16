@@ -106,3 +106,12 @@
 @utility bg-hero { background-image: var(--gradient-hero); }
 @utility shadow-card { box-shadow: var(--shadow-card); }
 @utility tabular { font-variant-numeric: tabular-nums; }
+
+.hg-bar { transform-box: fill-box; transform-origin: bottom; animation: hg-grow 4s ease-in-out infinite alternate; }
+.hg-line { stroke-dasharray: 1600; stroke-dashoffset: 1600; animation: hg-draw 6s ease-out infinite; }
+.hg-line2 { animation-delay: 1s; }
+.hg-area { animation: hg-fade 6s ease-out infinite; }
+@keyframes hg-grow { from { transform: scaleY(0.3); } to { transform: scaleY(1); } }
+@keyframes hg-draw { 0% { stroke-dashoffset: 1600; } 60%, 100% { stroke-dashoffset: 0; } }
+@keyframes hg-fade { 0%, 20% { opacity: 0; } 70%, 100% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .hg-bar, .hg-line, .hg-area { animation: none; stroke-dashoffset: 0; } }
