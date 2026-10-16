@@ -145,6 +145,15 @@ export type Database = {
         }
         Returns: boolean
       }
+      list_team: {
+        Args: never
+        Returns: {
+          created_at: string
+          email: string
+          roles: Database["public"]["Enums"]["app_role"][]
+          user_id: string
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "manager" | "staff" | "tax_officer"
