@@ -3,6 +3,7 @@ import { BarChart3, MapPin, ShieldCheck } from "lucide-react";
 import logo from "@/assets/omnitrack-logo.png";
 import { Button } from "@/components/ui/button";
 import { CATEGORIES } from "@/lib/omni";
+import { HeroGraphs } from "@/components/omni/HeroGraphs";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -18,7 +19,9 @@ export const Route = createFileRoute("/")({
 
 function Landing() {
   return (
-    <div className="min-h-screen bg-hero text-navy-foreground">
+    <div className="relative min-h-screen bg-hero text-navy-foreground">
+      <HeroGraphs />
+      <div className="relative">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
         <div className="flex items-center gap-2">
           <div className="rounded-lg bg-card p-1"><img src={logo} alt="OmniTrack logo" width={32} height={32} className="h-8 w-8" /></div>
@@ -52,6 +55,7 @@ function Landing() {
           ))}
         </div>
       </main>
+      </div>
     </div>
   );
 }
