@@ -14,6 +14,8 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedStatesRouteImport } from './routes/_authenticated/states'
+import { Route as AuthenticatedTeamRouteImport } from './routes/_authenticated/team'
+import { Route as AuthenticatedTransactionsRouteImport } from './routes/_authenticated/transactions'
 import { Route as AuthenticatedCategoryCatRouteImport } from './routes/_authenticated/category.$cat'
 
 const IndexRoute = IndexRouteImport.update({
@@ -40,6 +42,17 @@ const AuthenticatedStatesRoute = AuthenticatedStatesRouteImport.update({
   path: '/states',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedTeamRoute = AuthenticatedTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTransactionsRoute =
+  AuthenticatedTransactionsRouteImport.update({
+    id: '/transactions',
+    path: '/transactions',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCategoryCatRoute =
   AuthenticatedCategoryCatRouteImport.update({
     id: '/category/$cat',
@@ -52,6 +65,8 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/states': typeof AuthenticatedStatesRoute
+  '/team': typeof AuthenticatedTeamRoute
+  '/transactions': typeof AuthenticatedTransactionsRoute
   '/category/$cat': typeof AuthenticatedCategoryCatRoute
 }
 export interface FileRoutesByTo {
@@ -59,6 +74,8 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/states': typeof AuthenticatedStatesRoute
+  '/team': typeof AuthenticatedTeamRoute
+  '/transactions': typeof AuthenticatedTransactionsRoute
   '/category/$cat': typeof AuthenticatedCategoryCatRoute
 }
 export interface FileRoutesById {
@@ -68,13 +85,29 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/states': typeof AuthenticatedStatesRoute
+  '/_authenticated/team': typeof AuthenticatedTeamRoute
+  '/_authenticated/transactions': typeof AuthenticatedTransactionsRoute
   '/_authenticated/category/$cat': typeof AuthenticatedCategoryCatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/dashboard' | '/states' | '/category/$cat'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/states'
+    | '/team'
+    | '/transactions'
+    | '/category/$cat'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard' | '/states' | '/category/$cat'
+  to:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/states'
+    | '/team'
+    | '/transactions'
+    | '/category/$cat'
   id:
     | '__root__'
     | '/'
@@ -82,6 +115,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/dashboard'
     | '/_authenticated/states'
+    | '/_authenticated/team'
+    | '/_authenticated/transactions'
     | '/_authenticated/category/$cat'
   fileRoutesById: FileRoutesById
 }
@@ -128,6 +163,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStatesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/team': {
+      id: '/_authenticated/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof AuthenticatedTeamRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/transactions': {
+      id: '/_authenticated/transactions'
+      path: '/transactions'
+      fullPath: '/transactions'
+      preLoaderRoute: typeof AuthenticatedTransactionsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/category/$cat': {
       id: '/_authenticated/category/$cat'
       path: '/category/$cat'
@@ -141,12 +190,16 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedStatesRoute: typeof AuthenticatedStatesRoute
+  AuthenticatedTeamRoute: typeof AuthenticatedTeamRoute
+  AuthenticatedTransactionsRoute: typeof AuthenticatedTransactionsRoute
   AuthenticatedCategoryCatRoute: typeof AuthenticatedCategoryCatRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedStatesRoute: AuthenticatedStatesRoute,
+  AuthenticatedTeamRoute: AuthenticatedTeamRoute,
+  AuthenticatedTransactionsRoute: AuthenticatedTransactionsRoute,
   AuthenticatedCategoryCatRoute: AuthenticatedCategoryCatRoute,
 }
 
